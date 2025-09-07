@@ -1,0 +1,281 @@
+<div class="card">
+    <div class="card-header bg-primary">
+        <div class="d-flex justify-content-between">
+            <div class="text-white mt-1">
+                List Jadwal
+            </div>
+            <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
+            <div>
+                <% if(fitur.Add==1) { %>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnAddJadwal">Tambah Jadwal</button>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <% if (successMessage && successMessage[0] !=undefined ) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-circle me-2"></i>
+                <%= successMessage[0] %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% } %>
+                <% if (errorMessage && errorMessage[0] !=undefined ) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fa fa-exclamation-circle me-2"></i>
+                        <%= errorMessage[0] %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <% } %>
+                        <input type="hidden" id="namaGuru" value="<%= user.NamaDepan + ' ' + user.NamaBelakang %>">
+                        <div class="table-responsive">
+                            <table id="dataTable" class="table table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center text-dark">Nama</th>
+                                        <th class="text-center">Senin</th>
+                                        <th class="text-center">Selasa</th>
+                                        <th class="text-center">Rabu</th>
+                                        <th class="text-center">Kamis</th>
+                                        <th class="text-center">Jumat</th>
+                                        <th class="text-center">Sabtu</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="data">
+                                </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+    </div>
+</div>
+<div id="viewModal" style="display: none;"></div>
+<% scripts=` %>
+    <script async>
+        let dataTable = null;
+        function getDataJadwal() {
+            let namaGuru = $('#namaGuru').val()
+            if (dataTable !== null) {
+                dataTable.destroy();
+            }
+            dataTable = $('#dataTable').DataTable({
+                "order": [[0, 'asc']],
+                "searching": true,
+                "searchHighlight": true,
+                "ajax": {
+                    "url": "/getDataJadwal",
+                    "dataType": "json",
+                    "type": 'post',
+                    "data": {
+                        _csrf: $("#csrfToken").val()
+                    },
+                    "dataSrc": function (data) {
+                        let res = [];
+                        if (data.data.length > 0) {
+                            let senin = data.data.filter(
+                                (j) => j.Hari && j.Hari.toLowerCase() === "senin"
+                            );
+                            let selasa = data.data.filter(
+                                (j) => j.Hari && j.Hari.toLowerCase() === "selasa"
+                            );
+                            let rabu = data.data.filter(
+                                (j) => j.Hari && j.Hari.toLowerCase() === "rabu"
+                            );
+                            let kamis = data.data.filter(
+                                (j) => j.Hari && j.Hari.toLowerCase() === "kamis"
+                            );
+                            let jumat = data.data.filter(
+                                (j) => j.Hari && j.Hari.toLowerCase() === "jumat"
+                            );
+                            let sabtu = data.data.filter(
+                                (j) => j.Hari && j.Hari.toLowerCase() === "sabtu"
+                            );
+                            console.log(senin)
+                            let guruSet = new Set();
+
+                            for (let i = 0; i < data.data.length; i++) {
+                                let row = data.data[i];
+
+                                if (!guruSet.has(row.Guru)) {
+                                    guruSet.add(row.Guru);
+
+                                    let rowData = {
+                                        "Guru": row.Guru.replace(/\b\w/g, c => c.toUpperCase()),
+                                        "Senin": senin.length > 0
+                                            ? senin
+                                                .filter(j => j.Guru === row.Guru)
+                                                .map(j => '<span class= "text-primary fw-bold">' + j.Jam + '</span> (' + j.Jadwal.split(',').length + ' murid)<br>' + j.Jadwal.replace(/\b\w/g, c => c.toUpperCase()))
+                                                .join('<br><hr class="mt-1 mb-1">')
+                                            : '',
+                                        "Selasa": selasa.length > 0
+                                            ? selasa
+                                                .filter(j => j.Guru === row.Guru)
+                                                .map(j => '<span class= "text-primary fw-bold">' + j.Jam + '</span> (' + j.Jadwal.split(',').length + ' murid)<br>' + j.Jadwal.replace(/\b\w/g, c => c.toUpperCase()))
+                                                .join('<br><hr class="mt-1 mb-1">')
+                                            : '',
+                                        "Rabu": rabu.length > 0
+                                            ? rabu
+                                                .filter(j => j.Guru === row.Guru)
+                                                .map(j => '<span class= "text-primary fw-bold">' + j.Jam + '</span> (' + j.Jadwal.split(',').length + ' murid)<br>' + j.Jadwal.replace(/\b\w/g, c => c.toUpperCase()))
+                                                .join('<br><hr class="mt-1 mb-1">')
+                                            : '',
+                                        "Kamis": kamis.length > 0
+                                            ? kamis
+                                                .filter(j => j.Guru === row.Guru)
+                                                .map(j => '<span class= "text-primary fw-bold">' + j.Jam + '</span> (' + j.Jadwal.split(',').length + ' murid)<br>' + j.Jadwal.replace(/\b\w/g, c => c.toUpperCase()))
+                                                .join('<br><hr class="mt-1 mb-1">')
+                                            : '',
+                                        "Jumat": jumat.length > 0
+                                            ? jumat
+                                                .filter(j => j.Guru === row.Guru)
+                                                .map(j => '<span class= "text-primary fw-bold">' + j.Jam + '</span> (' + j.Jadwal.split(',').length + ' murid)<br>' + j.Jadwal.replace(/\b\w/g, c => c.toUpperCase()))
+                                                .join('<br><hr class="mt-1 mb-1">')
+                                            : '',
+                                        "Sabtu": sabtu.length > 0
+                                            ? sabtu
+                                                .filter(j => j.Guru === row.Guru)
+                                                .map(j => '<span class= "text-primary fw-bold">' + j.Jam + '</span> (' + j.Jadwal.split(',').length + ' murid)<br>' + j.Jadwal.replace(/\b\w/g, c => c.toUpperCase()))
+                                                .join('<br><hr class="mt-1 mb-1">')
+                                            : '',
+                                    };
+                                    res.push(rowData);
+                                }
+                            }
+
+                        }
+                        return res;
+                    }
+                },
+                "columns": [
+                    { "data": "Guru", className: 'text-primary' },
+                    {
+                        "data": "Senin", orderable: false,
+
+                    },
+                    {
+                        "data": "Selasa", orderable: false,
+
+                    },
+                    {
+                        "data": 'Rabu',
+                        orderable: false,
+
+                    },
+                    {
+                        "data": 'Kamis',
+                        orderable: false,
+
+                    },
+                    {
+                        "data": 'Jumat',
+                        orderable: false,
+
+                    },
+                    {
+                        "data": 'Sabtu',
+                        orderable: false,
+
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        render: function (data, type, row) {
+                            let formHtml = '';
+                            if (row.Guru == namaGuru.trim()) {
+                                formHtml += '<button class="btn btn-info mr-3" onclick="editJadwal(\'' + row.Guru + '\')">Edit</button>';
+                            }
+                            return '<div class="d-flex gap-2 align-items-center justify-content-center">' + formHtml + '</div>';
+                        }
+                    }
+
+                ],
+                rowCallback: function (row, data, index) {
+                    const today = new Date();
+                    const dayOfWeek = today.getDay();
+
+                    const dayToColumnIndex = {
+                        1: 1, // Senin
+                        2: 2, // Selasa
+                        3: 3, // Rabu
+                        4: 4, // Kamis
+                        5: 5, // Jumat
+                        6: 6  // Sabtu
+                    };
+
+                    const targetColIndex = dayToColumnIndex[dayOfWeek];
+                    if (typeof targetColIndex !== 'undefined') {
+                        $('td:eq(' + targetColIndex + ')', row).addClass('bg-warning');
+                    }
+                }
+            });
+
+        }
+    </script>
+    <script>
+        function editJadwal(guru) {
+            $.ajax({
+                url: '/getEditJadwal',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                    guru
+                },
+                success: function (response) {
+                    if (response.redirect) {
+                        return window.location.href = response.redirect
+                    }
+
+                    $("#viewModal").html(response.view).show()
+                    $("#editJadwalModal").modal('show')
+                },
+                error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        }
+        $(document).ready(function () {
+            getDataJadwal();
+            $('#dataTable').on('draw.dt', function () {
+                const searchVal = dataTable.search();
+
+                if (searchVal) {
+                    $('#dataTable tbody').unmark({
+                        done: function () {
+                            $('#dataTable tbody').mark(searchVal, {
+                                element: 'span',
+                                className: 'fw-bold bg-info text-white',
+                                separateWordSearch: false,
+                                // accuracy: {
+                                //     value: "exactly",
+                                //     limiters: [",", ".", " ", "(", ")", "[", "]", "{", "}", "-", "/"]
+                                // },
+                                caseSensitive: false
+                            });
+                        }
+                    });
+                } else {
+                    $('#dataTable tbody').unmark();
+                }
+            });
+            $('#btnAddJadwal').click(function (e) {
+                e.preventDefault()
+                $.ajax({
+                    url: '/getAddJadwal',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        _csrf: $("#csrfToken").val(),
+                    },
+                    success: function (response) {
+                        $("#viewModal").html(response.view).show()
+                        $("#addJadwalModal").modal('show')
+                    },
+                    error: function (a, b, c) {
+                        alert(c)
+                    }
+                })
+            })
+        });
+    </script>
+    <% ` %>

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--favicon-->
+    <link rel="icon" href="assets/images/favicon-32x32.png" type="image/png" />
+    <!--plugins-->
+    <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+    <link href="assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+    <link href="assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+    <!-- loader-->
+    <link href="assets/css/pace.min.css" rel="stylesheet" />
+    <script src="assets/js/pace.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/bootstrap-extended.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="assets/css/app.css" rel="stylesheet">
+    <link href="assets/css/icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- or -->
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <title>Halaman Login</title>
+</head>
+
+<body class="">
+    <!--wrapper-->
+    <div class="wrapper">
+        <div class="section-authentication-cover">
+            <div class="">
+                <div class="row g-0">
+
+                    <div
+                        class="col-12 col-xl-7 col-xxl-8 auth-cover-left align-items-center justify-content-center d-none d-xl-flex">
+
+                        <div class="card shadow-none bg-transparent shadow-none rounded-0 mb-0">
+                            <div class="card-body">
+                                <img src="assets/images/login-images/login-cover.svg"
+                                    class="img-fluid auth-img-cover-login" width="650" alt="" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 col-xl-5 col-xxl-4 auth-cover-right align-items-center justify-content-center">
+                        <div class="card rounded-0 m-3 shadow-none bg-transparent mb-0">
+                            <div class="card-body p-sm-5">
+                                <div class="">
+                                    <div class="mb-3 text-center">
+                                        <img src="assets/images/logo-icon.png" width="60" alt="">
+                                    </div>
+                                    <div class="text-center mb-4">
+                                        <h5 class="">Rock Admin</h5>
+                                        <p class="mb-0">Please log in to your account</p>
+                                    </div>
+                                    <% if (errorMessage && errorMessage[0] !=undefined ) { %>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <i class="fa fa-exclamation-circle me-2"></i>
+                                            <%= errorMessage[0] %>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <% } %>
+                                            <div class="form-body">
+                                                <form class="row g-3 formLogin" autocomplete="off">
+                                                    <input type="hidden" name="_csrf" id="_csrf"
+                                                        value="<%= csrfToken %>">
+                                                    <div class="col-12">
+                                                        <label for="username" class="form-label">Username</label>
+                                                        <input type="text" class="form-control" id="username"
+                                                            name="username" autofocus>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="inputChoosePassword"
+                                                            class="form-label">Password</label>
+                                                        <div class="input-group" id="show_hide_password">
+                                                            <input type="password" class="form-control border-end-0"
+                                                                id="password" placeholder="Enter Password">
+                                                            <a href="javascript:;"
+                                                                class="input-group-text bg-transparent"><i
+                                                                    class="bx bx-hide"></i></a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="d-grid">
+                                                            <button type="submit" class="btn btn-primary">Masuk</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="login-separater text-center mb-5">
+                                                <hr>
+                                            </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--end row-->
+            </div>
+        </div>
+    </div>
+    <!--end wrapper-->
+    <!-- Bootstrap JS -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <!--plugins-->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/plugins/simplebar/js/simplebar.min.js"></script>
+    <script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
+    <script async src="assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/forge/0.10.0/forge.min.js"></script>
+    <!--Password show & hide js -->
+    <script>
+        $(document).ready(function () {
+            $("#show_hide_password a").on('click', function (event) {
+                event.preventDefault();
+                if ($('#show_hide_password input').attr("type") == "text") {
+                    $('#show_hide_password input').attr('type', 'password');
+                    $('#show_hide_password i').addClass("bx-hide");
+                    $('#show_hide_password i').removeClass("bx-show");
+                } else if ($('#show_hide_password input').attr("type") == "password") {
+                    $('#show_hide_password input').attr('type', 'text');
+                    $('#show_hide_password i').removeClass("bx-hide");
+                    $('#show_hide_password i').addClass("bx-show");
+                }
+            });
+        });
+    </script>
+    <!--app JS-->
+    <script src="assets/js/app.js"></script>
+    <script>
+        setTimeout(function () {
+            var alert = $(".alert");
+            if (alert.length) {
+                alert.fadeOut(1500, function () {
+                    $(this).remove();
+                });
+            }
+        }, 3000);
+        $(".formLogin").on('submit', function (e) {
+            e.preventDefault()
+            let Username = $("#username").val()
+            let Password = $("#password").val()
+            let _csrf = $("#_csrf").val();
+            const publicKeyPem = `<%= publicKey %>`;
+            let encryptedPassword = null;
+            try {
+                const publicKey = forge.pki.publicKeyFromPem(publicKeyPem);
+                const encrypted = publicKey.encrypt(Password, 'RSA-OAEP', {
+                    md: forge.md.sha256.create()
+                });
+                encryptedPassword = forge.util.encode64(encrypted);
+            } catch (error) {
+            }
+            $.ajax({
+                url: '/auth',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf,
+                    username: Username,
+                    password: encryptedPassword
+                },
+                beforeSend: function () { },
+                success: function (response) {
+                    if (response.error) {
+                        if (response.error.Username) {
+                            $("#errUsername").html(response.error.Username)
+                            $("#username").addClass('is-invalid')
+                        } else {
+                            $("#errUsername").html('')
+                            $("#username").removeClass('is-invalid')
+                        }
+                        if (response.error.Password) {
+                            $("#errPassword").html(response.error.Password)
+                            $("#password").addClass('is-invalid')
+                        } else {
+                            $("#errPassword").html('')
+                            $("#password").removeClass('is-invalid')
+                        }
+                    } else {
+                        window.location.href = response.redirect
+                    }
+                },
+                error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

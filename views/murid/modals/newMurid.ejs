@@ -1,0 +1,466 @@
+<div class="modal fade" id="addMuridModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h1 class="modal-title fs-5  text-white" id="exampleModalLabel">Murid Baru</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="formSubmit" autocomplete="off" method="post" action="/addMurid" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" id="csrfToken" value="<%= csrfToken %>">
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="bs-stepper">
+                                <div class="bs-stepper-header" role="tablist">
+                                    <div class="step" data-target="#logins-part">
+                                        <button type="button" class="step-trigger" role="tab"
+                                            aria-controls="logins-part" id="logins-part-trigger">
+                                            <span class="bs-stepper-circle"><i class='bx bx-user'></i></span>
+                                            <span class="bs-stepper-label">Data Pribadi<small class="text-danger"
+                                                    style="display: none;"><br>Belum Diatur</small></span>
+                                        </button>
+                                    </div>
+                                    <div class="line"></div>
+                                    <div class="step" data-target="#information-part">
+                                        <button type="button" class="step-trigger" role="tab"
+                                            aria-controls="information-part" id="information-part-trigger">
+                                            <span class="bs-stepper-circle"><i class='bx bx-file'></i></span>
+                                            <span class="bs-stepper-label">Data Sekolah<small class="text-danger"
+                                                    style="display: none;"><br>Belum Diatur</small></span>
+                                        </button>
+                                    </div>
+                                    <div class="line"></div>
+                                    <div class="step" data-target="#work-part">
+                                        <button type="button" class="step-trigger" role="tab" aria-controls="work-part"
+                                            id="work-part-trigger">
+                                            <span class="bs-stepper-circle"><i class='bx bx-command'></i></span>
+                                            <span class="bs-stepper-label">Data Les<small class="text-danger"
+                                                    style="display: none;"><br>Belum Diatur</small></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="bs-stepper-content">
+                                    <div id="logins-part" class="content" role="tabpanel"
+                                        aria-labelledby="logins-part-trigger">
+                                        <hr>
+                                        <h5 class="text-center">Data Pribadi</h5>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="name" class="col-form-label">Nama
+                                                            Lengkap</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <div class="input-group">
+                                                            <input type="text" aria-label="First name" id="Name"
+                                                                name="name" class="form-control"
+                                                                placeholder="Nama Depan">
+                                                            <input type="text" aria-label="Last name" id="Name2"
+                                                                name="name2" class="form-control"
+                                                                placeholder="Nama Belakang">
+                                                        </div>
+                                                        <div class="invalid-feedback" id="errName"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="telp" class="col-form-label">Telp</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <input type="text" id="telp" name="telp" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="alamat" class="col-form-label">Alamat</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <textarea class="form-control" id="alamat" name="alamat"
+                                                            rows="3"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="tglLahir" class="col-form-label">Tanggal
+                                                            Lahir</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <input type="date" id="tglLahir" name="tglLahir"
+                                                            class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="jenisKelamin" class="col-form-label">Jenis
+                                                            Kelamin</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="jenisKelamin" id="pria" value="Pria" checked>
+                                                            <label class="form-check-label" for="pria">Pria</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="jenisKelamin" id="wanita" value="Wanita">
+                                                            <label class="form-check-label" for="wanita">Wanita</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="d-flex gap-2">
+                                                    <img id="previewImg" src="assets/images/avatars/user.png"
+                                                        class="img-thumbnail" width="250" alt="">
+                                                    <div class="mt-2">
+                                                        <input class="form-control" type="file" id="formFile"
+                                                            accept="image/*" name="image">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <button class="btn btn-primary" onclick="stepper1.previous()">Previous</button> -->
+                                    </div>
+                                    <div id="information-part" class="content" role="tabpanel"
+                                        aria-labelledby="information-part-trigger">
+                                        <hr>
+                                        <h5 class="text-center">Data Sekolah</h5>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="Sekolah" class="form-label">Sekolah</label>
+                                                <input type="text" class="form-control" id="Sekolah" name="sekolah">
+                                                <div class="invalid-feedback" id="errSekolah"></div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label for="Kelas" class="form-label">Kelas</label>
+                                                <select class="form-select" id="Kelas" name="kelas">
+                                                    <option value=""></option>
+                                                    <% kelas.forEach(function(c) { %>
+                                                        <option value="<%= c.kelas %>">
+                                                            <%= c.kelas %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                                <div class="invalid-feedback" id="errKelas"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="work-part" class="content mb-0" role="tabpanel"
+                                        aria-labelledby="work-part-trigger">
+                                        <hr>
+                                        <h5 class="text-center">Data Les</h5>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <label for="Cabang" class="form-label">Cabang</label>
+                                                <select class="form-select cabang" id="Cabang" name="cabang">
+                                                    <% cabang.forEach(function(c) { %>
+                                                        <option value="<%= c.ID %>">
+                                                            <%= c.Name %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                                <div class="invalid-feedback" id="errCabang"></div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <label for="" class="form-label">Bidang & Guru</label>
+                                                <div class="input-group mb-2">
+                                                    <span class="input-group-text">Bidang</span>
+                                                    <select class="form-select bidang" name="bidang[]" id="bidang"
+                                                        onchange=changeBidang()>
+                                                        <option value="">Pilih Bidang</option>
+
+                                                    </select>
+                                                    <span class="input-group-text">Guru</span>
+                                                    <select class="form-select" name="guru[]" id="guru">
+                                                        <option value="">Pilih Guru</option>
+
+                                                    </select>
+                                                    <span class="input-group-text">Trial</span>
+                                                    <div class="input-group-text">
+                                                        <input class="form-check-input mt-0" type="checkbox" value="1"
+                                                            name="trial[]" id="trial">
+                                                    </div>
+                                                    <button type="button" class="btn btn-info btn-sm" id="addDetail"><i
+                                                            class="fas fa-plus"></i></button>
+                                                </div>
+
+                                                <div id="detail-block"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3 justify-content-between">
+                                            <div class="col-lg-2"></div>
+                                            <div class="col-lg-2">
+                                                <button type="submit" class="btn btn-primary"
+                                                    id="btnSubmit">Simpan</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    counter = 0
+    $('#addDetail').click(function (e) {
+        e.preventDefault()
+        $(this).blur()
+        counter += 1
+        let html =
+            `
+            <div class="input-group mb-2" id="detail-${counter}">
+                <span class="input-group-text">Bidang</span>
+                <select class="form-select" name="bidang" id="bidang${counter}" onchange=changeBidang(${counter})>
+                    <option value="">Pilih Bidang</option>
+
+                </select>
+                <span class="input-group-text">Guru</span>
+                <select class="form-select" name="guru" id="guru${counter}">
+                    <option value="">Pilih Guru</option>
+
+                </select>
+                <span class="input-group-text">Trial</span>
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" value="1"
+                        name="trial[]" id="trial${counter}">
+                </div>
+                
+                <button type="button" class="btn btn-danger btn-sm btnHapusForm"
+                    data-id="${counter}"><i class="fas fa-minus text-center"></i></button>
+            </div>
+        `
+        $('#detail-block').append(html)
+        getBidang(counter)
+        getGuru(counter)
+    });
+
+    $(document).on('click', '.btnHapusForm', function () {
+        const rowId = $(this).data('id');
+        $(`#detail-${rowId}`).remove();
+        counter -= 1
+        getBidang(counter)
+    });
+
+    $(document).ready(function () {
+        var stepper = new Stepper($('.bs-stepper')[0], {
+            linear: false,
+            animation: true,
+            selectors: {
+                steps: '.step',
+                trigger: '.step-trigger',
+                stepper: '.bs-stepper'
+            }
+        })
+        getBidang(counter)
+        // getGuru(counter)
+    })
+
+    $(".formSubmit").on('submit', function (e) {
+        e.preventDefault()
+        const token = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrfToken='))
+            ?.split('=')[1];
+        const form = this;
+        const formData = new FormData(form);
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            dataType: 'json',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-Token': token
+            },
+            beforeSend: function () {
+                $('#btnSubmit').attr('disabled', 'disabled')
+            },
+            success: function (response) {
+                $('#btnSubmit').removeAttr('disabled')
+                $('#btnSubmit').removeAttr('disabled')
+                if (response.logout) {
+                    window.location.href = response.logout
+                } else {
+                    if (response.error) {
+                        if (response.error.Username) {
+                            $("#Username").addClass('is-invalid')
+                            $("#errUsername").html(response.error.Username)
+                        } else {
+                            $("#Username").removeClass('is-invalid')
+                            $("#errUsername").html('')
+                        }
+                        if (response.error.Name) {
+                            $("#Name").addClass('is-invalid')
+                            $("#errName").html(response.error.Name)
+                        } else {
+                            $("#Name").removeClass('is-invalid')
+                            $("#errName").html('')
+                        }
+                        if (response.error.Password) {
+                            $("#Password").addClass('is-invalid')
+                            $("#errPassword").html(response.error.Password)
+                        } else {
+                            $("#Password").removeClass('is-invalid')
+                            $("#errPassword").html('')
+                        }
+                    } else {
+                        window.location.reload()
+                        // $('#addMuridModal').modal('hide');
+                        // dataTable.ajax.reload(null, false);
+
+                    }
+                }
+            },
+            error: function (a, b, c) {
+                alert(c)
+            }
+        })
+    })
+
+    function getBidang(counter = 0) {
+        // Ambil semua value bidang yang sudah dipilih
+        let bidangValues = [];
+        // Bidang utama
+        let mainBidang = $('#bidang').val();
+        if (mainBidang) bidangValues.push(mainBidang);
+        // Bidang tambahan (dari detail-block)
+        $('[id^=bidang]').each(function () {
+            // Hindari duplikasi dengan bidang utama
+            if ($(this).attr('id') !== 'bidang') {
+                let val = $(this).val();
+                if (val) bidangValues.push(val);
+            }
+        });
+        // bidangValues sekarang berisi semua value bidang yang sudah dipilih
+        const cabangId = $('#Cabang').val();
+        // Kosongkan bidang dan guru
+        if (counter) {
+            $('#bidang' + counter).html('<option value="">Pilih Bidang</option>');
+            $('#guru' + counter).html('<option value="">Pilih Guru</option>');
+        } else {
+            $('#bidang').html('<option value="">Pilih Bidang</option>');
+            $('#guru').html('<option value="">Pilih Guru</option>');
+        }
+        if (!cabangId) return;
+
+        $.ajax({
+            url: '/getBidangByCabang',
+            type: 'POST',
+            dataType: 'json',
+            data: { cabang: cabangId, _csrf: $('#csrfToken').val() },
+            success: function (data) {
+                if (data && Array.isArray(data.data)) {
+                    data.data = data.data.filter(function (b) {
+                        return !bidangValues.includes(b.Bidang);
+                    });
+                    data.data.forEach(function (b) {
+                        if (counter) {
+                            $('#bidang' + counter).append(
+                                $('<option>', { value: b.Bidang, text: b.Bidang })
+                            );
+                        } else {
+                            $('#bidang').append(
+                                $('<option>', { value: b.Bidang, text: b.Bidang })
+                            );
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function getGuru(counter = 0) {
+
+        const cabangId = $('#Cabang').val();
+        let bidang = $('#bidang').val();
+
+        if (counter) {
+            bidang = $('#bidang' + counter).val();
+            $('#guru' + counter).html('<option value="">Pilih Guru</option>');
+        } else {
+            $('#guru').html('<option value="">Pilih Guru</option>');
+        }
+        if (!cabangId || !bidang) return;
+
+        $.ajax({
+            url: '/getGuruByCabangBidang',
+            type: 'POST',
+            dataType: 'json',
+            data: { cabang: cabangId, bidang, _csrf: $('#csrfToken').val() },
+            success: function (data) {
+                // Cek duplikasi bidang
+                let bidangList = [];
+                // Bidang utama
+                let mainBidang = $('#bidang').val();
+                if (mainBidang) bidangList.push(mainBidang);
+                // Bidang tambahan (dari detail-block)
+                $('[id^=bidang]').each(function () {
+                    if ($(this).attr('id') !== 'bidang') {
+                        let val = $(this).val();
+                        if (val) bidangList.push(val);
+                    }
+                });
+                // Cek duplikasi
+                let bidangCount = {};
+                bidangList.forEach(function (b) {
+                    bidangCount[b] = (bidangCount[b] || 0) + 1;
+                });
+                let dupe = Object.keys(bidangCount).find(k => bidangCount[k] > 1);
+                if (dupe) {
+                    // Hapus bidang yang paling akhir diinput (yang duplikat)
+                    let lastIdx = -1;
+                    $('[id^=bidang]').each(function (i) {
+                        if ($(this).val() === dupe) lastIdx = i;
+                    });
+                    if (lastIdx > 0) {
+                        // id ke-n (karena index 0 = bidang utama)
+                        let id = $('[id^=bidang]').eq(lastIdx).attr('id');
+                        // Hapus parent input-group
+                        $('#' + id).closest('.input-group').remove();
+                        // counter -= 1;
+                        // return;
+                    }
+                }
+                if (data && Array.isArray(data.data)) {
+                    data.data.forEach(function (b) {
+                        if (counter) {
+                            $('#guru' + counter).append(
+                                $('<option>', { value: b.NamaDepan + ' ' + b.NamaBelakang, text: b.NamaDepan.replace(/\b\w/g, c => c.toUpperCase()) + ' ' + b.NamaBelakang.replace(/\b\w/g, c => c.toUpperCase()) })
+                            );
+                        } else {
+                            $('#guru').append(
+                                $('<option>', { value: b.NamaDepan + ' ' + b.NamaBelakang, text: b.NamaDepan.replace(/\b\w/g, c => c.toUpperCase()) + ' ' + b.NamaBelakang.replace(/\b\w/g, c => c.toUpperCase()) })
+                            );
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    $('#Cabang').on('change', function () {
+        $('#detail-block').empty();
+        counter = 0;
+        getBidang()
+    });
+
+    function changeBidang(counter = 0) {
+        // Jika ingin juga mengelola guru sesuai bidang dan cabang
+        if (counter) {
+            getGuru(counter)
+
+        } else {
+            getGuru()
+        }
+    }
+
+</script>

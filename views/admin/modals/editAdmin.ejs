@@ -1,0 +1,431 @@
+<div class="modal fade" id="editAdminModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h1 class="modal-title fs-5  text-white" id="exampleModalLabel">Ubah Data Karyawan</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="formSubmit" autocomplete="off" method="post" action="/editUser" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" id="csrfToken" value="<%= csrfToken %>">
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="bs-stepper">
+                                <div class="bs-stepper-header" role="tablist">
+                                    <div class="step" data-target="#logins-part">
+                                        <button type="button" class="step-trigger" role="tab"
+                                            aria-controls="logins-part" id="logins-part-trigger">
+                                            <span class="bs-stepper-circle"><i class='bx bx-user'></i></span>
+                                            <span class="bs-stepper-label">Data Pribadi<small class="text-danger"
+                                                    style="display: none;"><br>Belum Diatur</small></span>
+                                        </button>
+                                    </div>
+                                    <div class="line"></div>
+                                    <div class="step" data-target="#information-part">
+                                        <button type="button" class="step-trigger" role="tab"
+                                            aria-controls="information-part" id="information-part-trigger">
+                                            <span class="bs-stepper-circle"><i class='bx bx-file'></i></span>
+                                            <span class="bs-stepper-label">Detail Akun<small class="text-danger"
+                                                    style="display: none;"><br>Belum Diatur</small></span>
+                                        </button>
+                                    </div>
+                                    <div class="line"></div>
+                                    <div class="step" data-target="#work-part">
+                                        <button type="button" class="step-trigger" role="tab" aria-controls="work-part"
+                                            id="work-part-trigger">
+                                            <span class="bs-stepper-circle"><i class='bx bx-command'></i></span>
+                                            <span class="bs-stepper-label">Detail Pekerjaan<small class="text-danger"
+                                                    style="display: none;"><br>Belum Diatur</small></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="bs-stepper-content">
+                                    <div id="logins-part" class="content" role="tabpanel"
+                                        aria-labelledby="logins-part-trigger">
+                                        <hr>
+                                        <h5 class="text-center">Data Pribadi</h5>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="name" class="col-form-label">Nama
+                                                            Lengkap</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <div class="input-group">
+                                                            <input type="text" aria-label="First name" id="Name"
+                                                                name="name" class="form-control"
+                                                                placeholder="Nama Depan" value="<%= user.NamaDepan %>">
+                                                            <input type="text" aria-label="Last name" id="Name2"
+                                                                name="name2" class="form-control"
+                                                                placeholder="Nama Belakang"
+                                                                value="<%= user.NamaBelakang %>">
+                                                        </div>
+                                                        <div class="invalid-feedback" id="errName"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="telp" class="col-form-label">Telp</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <input type="text" id="telp" name="telp" class="form-control"
+                                                            value="<%= user.Telp %>">
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="alamat" class="col-form-label">Alamat</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <textarea class="form-control" id="alamat" name="alamat"
+                                                            rows="3"><%= user.Alamat %></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="tglLahir" class="col-form-label">Tanggal
+                                                            Lahir</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <% const tglStr=helpers.dateFormate(user.Tgl_Lahir); %>
+                                                            <input type="date" id="tglLahir" name="tglLahir"
+                                                                class="form-control" value="<%= tglStr %>">
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3 align-items-center mb-3">
+                                                    <div class="col-lg-3">
+                                                        <label for="jenisKelamin" class="col-form-label">Jenis
+                                                            Kelamin</label>
+                                                    </div>
+                                                    <div class="col-lg-9">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="jenisKelamin" id="pria" value="Pria"
+                                                                <%=user.JenisKelamin=='Pria' ? 'checked' : '' %>>
+                                                            <label class="form-check-label" for="pria">Pria</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="jenisKelamin" id="wanita" value="Wanita"
+                                                                <%=user.JenisKelamin=='Wanita' ? 'checked' : '' %>>
+                                                            <label class="form-check-label" for="wanita">Wanita</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="d-flex gap-2">
+                                                    <img id="previewImg"
+                                                        src="<%= user.Image ? user.Image : 'assets/images/avatars/user.png' %>"
+                                                        class="img-thumbnail" width="250" alt="">
+                                                    <div class="mt-2">
+                                                        <input class="form-control" type="file" id="formFile"
+                                                            accept="image/*" name="image">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <button class="btn btn-primary" onclick="nextForm()">Next</button> -->
+                                    </div>
+                                    <div id="information-part" class="content" role="tabpanel"
+                                        aria-labelledby="information-part-trigger">
+                                        <hr>
+                                        <h5 class="text-center">Detail Akun</h5>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="Username" class="form-label">Username</label>
+                                                <input type="text" class="form-control" id="Username" name="username"
+                                                    value="<%= user.Username %>">
+                                                <div class="invalid-feedback" id="errUsername"></div>
+                                            </div>
+                                            <div class="col">
+                                                <label for="" class="form-label">Status Karyawan</label>
+                                                <br>
+                                                <div class="d-flex gap-2">
+                                                    <input type="radio" class="btn-check" name="status"
+                                                        id="success-outlined" autocomplete="off" value="1"
+                                                        <%=user.Active==1 ? 'checked' : '' %>
+                                                    onchange="isCutiChecked()">
+                                                    <label class="btn btn-outline-success"
+                                                        for="success-outlined">Aktif</label>
+                                                    <input type="radio" class="btn-check" name="status"
+                                                        id="info-outlined" autocomplete="off" value="2"
+                                                        <%=user.Active==2 ? 'checked' : '' %>
+                                                    onchange="isCutiChecked()">
+                                                    <label class="btn btn-outline-info" for="info-outlined">Cuti</label>
+
+                                                    <input type="radio" class="btn-check" name="status"
+                                                        id="danger-outlined" autocomplete="off" value="0"
+                                                        <%=user.Active==0 ? 'checked' : '' %>
+                                                    onchange="isCutiChecked()">
+                                                    <label class="btn btn-outline-danger"
+                                                        for="danger-outlined">Resign</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div id="tglCuti">
+                                                    <label for="daterange" class="form-label">Tanggal Cuti</label>
+                                                    <input type="text" id="daterange" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div id="work-part" class="content" role="tabpanel"
+                                        aria-labelledby="work-part-trigger">
+                                        <hr>
+                                        <h5 class="text-center">Detail Pekerjaan</h5>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label for="Cabang" class="form-label">Cabang</label>
+                                                <select class="form-select" id="Cabang" name="cabang">
+                                                    <% cabang.forEach(function(c) { %>
+                                                        <option value="<%= c.ID %>" <%=user.CabangID==c.ID ? 'selected'
+                                                            : '' %>>
+                                                            <%= c.Name %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                                <div class="invalid-feedback" id="errCabang"></div>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <label for="Penghasilan" class="form-label">Penghasilan</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="Penghasilan"
+                                                        name="penghasilan" value="<%= user.Nominal %>">
+                                                    <span class="input-group-text">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="type"
+                                                                id="persen" value="persen" <%=user.Percentage==1
+                                                                ? 'checked' : '' %>>
+                                                            <label class="form-check-label" for="persen">
+                                                                Persentase
+                                                            </label>
+                                                        </div>
+                                                    </span>
+                                                    <span class="input-group-text">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="type"
+                                                                id="tetap" value='tetap' <%=user.Percentage==0
+                                                                ? 'checked' : '' %>>
+                                                            <label class="form-check-label" for="tetap">
+                                                                Gaji Tetap
+                                                            </label>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                                <div class="invalid-feedback" id="errPenghasilan"></div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label for="Role" class="form-label">Jabatan</label>
+                                                <select class="form-select" id="Role" name="role" required>
+                                                    <option value="CS" <%=user.Role=='CS' ? 'selected' : '' %>>CS
+                                                    </option>
+                                                    <option value="Guru" <%=user.Role=='Guru' ? 'selected' : '' %>>Guru
+                                                    </option>
+                                                    <option value="Owner" <%=user.Role=='Owner' ? 'selected' : '' %>
+                                                        >Owner</option>
+                                                </select>
+                                                <div class="invalid-feedback" id="errRole"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-lg-3">
+                                                <label for="Bidang" class="form-label">Bidang</label>
+                                                <input type="text" class="form-control" id="Bidang" name="bidang"
+                                                    value="<%= user.Bidang %>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="btnSubmit">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#daterange').daterangepicker({
+            autoApply: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD-MM-YYYY',
+                daysOfWeek: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+                monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+                firstDay: 1
+            },
+            opens: 'left'
+        },
+            function (start, end, label) {
+                // ✅ Callback setelah pilih
+                $('#daterange').val(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
+            });
+    });
+
+    function isCutiChecked() {
+        const cutiRadio = document.getElementById('info-outlined');
+        if (cutiRadio.checked) {
+            $('#tglCuti').show();
+            $('#tglCuti input').val('')
+            $('#daterange').data('daterangepicker').setStartDate(moment());
+            $('#daterange').data('daterangepicker').setEndDate(moment());
+        } else {
+            $('#tglCuti').hide();
+        }
+    }
+</script>
+<script>
+    fileInput = document.getElementById('formFile');
+    previewImg = document.getElementById('previewImg');
+
+    fileInput.addEventListener('change', function () {
+        file = this.files[0];
+
+        // Pastikan ada file dan itu adalah gambar
+        if (file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Hanya file gambar yang diperbolehkan!');
+                this.value = ''; // Reset input
+                previewImg.src = 'assets/images/avatars/user.png'; // Reset ke default
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewImg.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    $(document).ready(function () {
+        $('#tglCuti').hide();
+        isCutiChecked()
+        var stepper = new Stepper($('.bs-stepper')[0], {
+            linear: false,
+            animation: true,
+            selectors: {
+                steps: '.step',
+                trigger: '.step-trigger',
+                stepper: '.bs-stepper'
+            }
+        })
+    })
+
+    // function nextForm() {
+    //     let stepper = new Stepper(document.querySelector('.bs-stepper'))
+    //     const name = $('#Name').val().trim();
+    //     if (name === '') {
+    //         $('#Name').addClass('is-invalid');
+    //         $('#errName').text('Nama tidak boleh kosong');
+    //         return;
+    //     } else {
+    //         $('#Name').removeClass('is-invalid');
+    //         $('#errName').text('');
+    //     }
+    //     stepper.next();
+    // }
+
+    function generateRandomPassword(length) {
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+        let password = "";
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            password += charset[randomIndex];
+        }
+        return password;
+    }
+
+    $('#generatePassword').on('click', function () {
+        const newPassword = generateRandomPassword(12);
+        $('#Password').val(newPassword);
+    });
+
+    $('#copyPassword').on('click', function () {
+        const passwordField = document.getElementById('Password');
+        if (passwordField.value) {
+            passwordField.select();
+            passwordField.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(passwordField.value).then(function () {
+                alert('Password copied to clipboard!');
+            }).catch(function () {
+                alert('Failed to copy password. Please try again.');
+            });
+        } else {
+            alert('No password to copy!');
+        }
+    });
+
+    $(".formSubmit").on('submit', function (e) {
+        e.preventDefault()
+        const token = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrfToken='))
+            ?.split('=')[1];
+        const form = this;
+        const formData = new FormData(form);
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            dataType: 'json',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-Token': token
+            },
+            beforeSend: function () {
+                $('#btnSubmit').attr('disabled', 'disabled')
+            },
+            success: function (response) {
+                $('#btnSubmit').removeAttr('disabled')
+                $('#btnSubmit').removeAttr('disabled')
+                if (response.logout) {
+                    window.location.href = response.logout
+                } else {
+                    if (response.error) {
+                        if (response.error.Username) {
+                            $("#Username").addClass('is-invalid')
+                            $("#errUsername").html(response.error.Username)
+                        } else {
+                            $("#Username").removeClass('is-invalid')
+                            $("#errUsername").html('')
+                        }
+                        if (response.error.Name) {
+                            $("#Name").addClass('is-invalid')
+                            $("#errName").html(response.error.Name)
+                        } else {
+                            $("#Name").removeClass('is-invalid')
+                            $("#errName").html('')
+                        }
+                        if (response.error.Password) {
+                            $("#Password").addClass('is-invalid')
+                            $("#errPassword").html(response.error.Password)
+                        } else {
+                            $("#Password").removeClass('is-invalid')
+                            $("#errPassword").html('')
+                        }
+                    } else {
+                        window.location.reload()
+                    }
+                }
+            },
+            error: function (a, b, c) {
+                alert(c)
+            }
+        })
+    })
+
+</script>

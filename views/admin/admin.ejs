@@ -1,0 +1,220 @@
+<div class="card">
+    <div class="card-header bg-primary">
+        <div class="d-flex justify-content-between">
+            <div class="text-white mt-1">
+                List Karyawan
+            </div>
+            <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
+            <div>
+                <% if(fitur.Add==1) { %>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnAddAdmin">Tambah Data</button>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <% if (successMessage && successMessage[0] !=undefined ) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-circle me-2"></i>
+                <%= successMessage[0] %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% } %>
+                <% if (errorMessage && errorMessage[0] !=undefined ) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fa fa-exclamation-circle me-2"></i>
+                        <%= errorMessage[0] %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <% } %>
+                        <div class="table-responsive">
+                            <table id="dataTable" class="table table-bordered table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" width="10px">#</th>
+                                        <th class="text-center">Nama</th>
+                                        <th class="text-center">Cabang</th>
+                                        <th class="text-center" width="20px">Status</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="data"></tbody>
+                                </tbody>
+                            </table>
+                        </div>
+    </div>
+</div>
+<div id="viewModal" style="display: none;"></div>
+<% scripts=` %>
+    <script>
+        $("#btnAddAdmin").on('click', function (e) {
+            e.preventDefault()
+            $.ajax({
+                url: '/getAddUser',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#addAdminModal").modal('show')
+                },
+                error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        })
+        let dataTable = null;
+
+        function getDataAdmin() {
+            console.log('getDataAdmin');
+            if (dataTable !== null) {
+                dataTable.destroy();
+            }
+            dataTable = $('#dataTable').DataTable({
+                "order": [[0, 'asc']],
+                "searching": true,
+                "ajax": {
+                    "url": "/getDataUser",
+                    "dataType": "json",
+                    "type": 'post',
+                    "data": {
+                        _csrf: $("#csrfToken").val()
+                    },
+                    "dataSrc": function (data) {
+                        let res = [];
+                        if (data.data.length > 0) {
+                            for (let i = 0; i < data.data.length; i++) {
+                                let row = data.data[i];
+                                let username = row.Username ? row.Username : '-';
+                                let capitalize = s => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
+                                let name = capitalize(row.NamaDepan) + ' ' + capitalize(row.NamaBelakang);
+                                let rowData = {
+                                    "ID": row.ID,
+                                    "Number": i + 1,
+                                    "Nama": name,
+                                    'Username': username,
+                                    "Image": row.Image ? row.Image : 'assets/images/avatars/user.png',
+                                    "Telp": row.Telp ? row.Telp : '-',
+                                    "Cabang": row.CabangName,
+                                    "Status": row.Active,
+                                    "Role": row.Role,
+                                    "PusatF": row.FlagPusat,
+                                    'Edit': data.fitur.Edit,
+                                    'Delete': data.fitur.Delete,
+                                };
+                                res.push(rowData);
+                            }
+                        }
+                        return res;
+                    }
+                },
+                "columns": [
+                    { "data": "Number" },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            let usernameHtml = row.Username && row.Username !== '-' ? '<br>Username: <b class="text-primary">' + row.Username + '</b>' : '';
+                            let telpText = row.Telp && row.Telp !== '-' ? '<br>Telp: <b class="text-primary">' + row.Telp + '</b>' : '';
+                            return '<div class="d-flex align-items-center"> <img src="' + row.Image + '" alt="User Image" class="rounded-circle me-2" style="width: 40px; height: 40px;"><span><b>' + row.Nama + '</b>' + usernameHtml + telpText + '</span></div>';
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            return row.PusatF == 1 ? row['Cabang'] + ' (Pusat)' : row['Cabang'];
+                        }
+                    },
+                    {
+                        "data": null,
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return row['Role'] + ' ' + (row['Status'] == 1 ? '<i class="fa-solid fa-circle-check text-success"></i>' : row['Status'] == 2 ? '<i class="fa-solid fa-circle-minus text-info"></i>' : '<i class="fa-solid fa-circle-xmark text-danger"></i>')
+                        }
+                    },
+                    {
+                        "data": null,
+                        orderable: false,
+                        "render": function (data, type, row) {
+                            console.log(row)
+                            let formHtml = '';
+                            if (row.Username) {
+                                formHtml += '<button class="btn btn-primary mr-3" onclick="accessAdmin(' + row.ID + ')">Access</button>';
+                            }
+                            if (row.Status == 1) {
+                                if (row.Edit == 1) {
+                                    formHtml += '<button class="btn btn-info mr-3" onclick="editAdmin(' + row.ID + ')">Edit</button>';
+                                }
+                                if (row.Delete == 1) {
+                                    formHtml += '<button class="btn btn-danger ml-3" onclick="deleteAdmin(' + row.ID + ')">Delete</button>';
+                                }
+                            }
+                            return '<div class="d-flex gap-2 align-items-center justify-content-center">' + formHtml + '</div>';
+                        }
+                    }
+                ],
+                rowCallback: function (row, data, index) {
+                    if (data.Status == 0) {
+                        // $(row).addClass('bg-dark');
+                        $('td', row).addClass('bg-warning text-white');
+                    }
+                }
+            });
+        }
+        function accessAdmin(ID) {
+            $.ajax({
+                url: '/getAccessAdmin',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                    ID,
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#accessAdminModal").modal('show')
+                }, error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        }
+        function editAdmin(ID) {
+            $.ajax({
+                url: '/getEditUser',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                    ID,
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#editAdminModal").modal('show')
+                }, error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        }
+        function deleteAdmin(ID) {
+            $.ajax({
+                url: '/getDeleteAdmin',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                    ID
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#deleteAdminModal").modal('show')
+                }, error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        }
+        $(document).ready(function () {
+            getDataAdmin();
+        });
+    </script>
+    <% ` %>

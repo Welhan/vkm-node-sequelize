@@ -1,0 +1,262 @@
+<div class="card">
+    <div class="card-header bg-primary">
+        <div class="d-flex justify-content-between">
+            <div class="text-white mt-1">
+                List Murid
+            </div>
+            <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
+            <div>
+                <% if(fitur.Add==1) { %>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnAddMurid">Tambah Data</button>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <% if (successMessage && successMessage[0] !=undefined ) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-circle me-2"></i>
+                <%= successMessage[0] %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <% } %>
+                <% if (errorMessage && errorMessage[0] !=undefined ) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fa fa-exclamation-circle me-2"></i>
+                        <%= errorMessage[0] %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <% } %>
+                        <div class="table-responsive">
+                            <table id="dataTable" class="table table-bordered table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" width="10px">#</th>
+                                        <th class="text-center">Nama</th>
+                                        <th class="text-center">Cabang</th>
+                                        <th class="text-center" width="20px">Status</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="data"></tbody>
+                                </tbody>
+                            </table>
+                        </div>
+    </div>
+</div>
+<div id="viewModal" style="display: none;"></div>
+<% scripts=` %>
+    <script async>
+        let dataTable = null;
+        function getDataMurid() {
+            if (dataTable !== null) {
+                dataTable.destroy();
+            }
+            dataTable = $('#dataTable').DataTable({
+                "order": [[0, 'asc']],
+                "searching": true,
+                "ajax": {
+                    "url": "/getDataMurid",
+                    "dataType": "json",
+                    "type": 'post',
+                    "data": {
+                        _csrf: $("#csrfToken").val()
+                    },
+                    "dataSrc": function (data) {
+                        let res = [];
+                        if (data.data.length > 0) {
+                            for (let i = 0; i < data.data.length; i++) {
+                                let row = data.data[i];
+                                let capitalize = s => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
+                                let student = row.Nama.split(' ');
+                                let name = student.map(capitalize).join(' ');
+                                let rowData = {
+                                    "ID": row.ID,
+                                    "Number": i + 1,
+                                    "Nama": name,
+                                    "Image": row.Image ? row.Image : 'assets/images/murid/icon.jpg',
+                                    "Telp": row.Telp ? row.Telp : '-',
+                                    "Cabang": row.Cabang,
+                                    "Status": row.Active,
+                                    "PusatF": row.PusatF,
+                                    'hasJadwal': row.hasJadwal,
+                                    'Edit': data.fitur.Edit,
+                                    'Delete': data.fitur.Delete,
+                                };
+                                res.push(rowData);
+                            }
+                        }
+                        return res;
+                    }
+                },
+                "columns": [
+                    { "data": "Number" },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+
+                            let telpText = row.Telp && row.Telp !== '-' ? '<br>Telp: <b class="text-primary">' + row.Telp + '</b>' : '';
+                            return '<div class="d-flex align-items-center"> <img src="' + row.Image + '" alt="User Image" class="rounded-circle me-2" style="width: 40px; height: 40px;"><span><b>' + row.Nama + '</b>' + telpText + '</span></div>';
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            return row.PusatF == 1 ? row['Cabang'] + ' (Pusat)' : row['Cabang'];
+                        }
+                    },
+                    {
+                        "data": null,
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return (row['Status'] == 1 ? 'Aktif' : row['Status'] == 2 ? 'Cuti' : 'Berhenti')
+                        }
+                    },
+                    {
+                        "data": null,
+                        orderable: false,
+                        "render": function (data, type, row) {
+                            let formHtml = '';
+                            formHtml += '<button class="btn btn-primary mr-3" onclick="profileMurid(' + row.ID + ')">Profile</button>';
+                            if (row.Status == 1) {
+                                if (row.hasJadwal == 1) {
+                                    formHtml += '<button class="btn btn-secondary mr-3" onclick="jadwalMurid(' + row.ID + ')">Jadwal Les</button>';
+                                }
+
+                                if (row.Edit == 1) {
+                                    formHtml += '<button class="btn btn-info mr-3" onclick="editAdmin(' + row.ID + ')">Edit</button>';
+                                }
+                                if (row.Delete == 1) {
+                                    formHtml += '<button class="btn btn-danger ml-3" onclick="deleteAdmin(' + row.ID + ')">Delete</button>';
+                                }
+                            }
+                            return '<div class="d-flex gap-2 align-items-center justify-content-center">' + formHtml + '</div>';
+                        }
+                    }
+                ],
+                rowCallback: function (row, data, index) {
+                    if (data.hasJadwal !== 1) {
+                        // Anda bisa menggunakan data.hasJadwal di sini
+                        // Contoh: console.log('hasJadwal:', data.hasJadwal);
+                        $('td', row).addClass('bg-warning text-white');
+                    }
+                    if (data.Status == 0) {
+                        // $(row).addClass('bg-dark');
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        $("#btnAddMurid").on('click', function (e) {
+            e.preventDefault()
+            $.ajax({
+                url: '/getAddMurid',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#addMuridModal").modal('show')
+                },
+                error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        })
+
+        function accessAdmin(ID) {
+            $.ajax({
+                url: '/getAccessAdmin',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                    ID,
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#accessAdminModal").modal('show')
+                }, error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        }
+        function editAdmin(ID) {
+            $.ajax({
+                url: '/getEditUser',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                    ID,
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#editAdminModal").modal('show')
+                }, error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        }
+        function deleteAdmin(ID) {
+            $.ajax({
+                url: '/getDeleteAdmin',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                    ID
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#deleteAdminModal").modal('show')
+                }, error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        }
+
+        function profileMurid(id) {
+            $.ajax({
+                url: '/getProfileMurid',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                    ID: id
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#profileMuridModal").modal('show')
+                }, error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        }
+
+        function jadwalMurid(id) {
+            $.ajax({
+                url: '/getJadwalMurid',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _csrf: $("#csrfToken").val(),
+                    ID: id
+                },
+                success: function (response) {
+                    $("#viewModal").html(response.view).show()
+                    $("#jadwalMuridModal").modal('show')
+                }, error: function (a, b, c) {
+                    alert(c)
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            getDataMurid();
+        });
+    </script>
+    <% ` %>

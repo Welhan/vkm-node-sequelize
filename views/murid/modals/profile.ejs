@@ -1,0 +1,94 @@
+<div class="modal fade" id="profileMuridModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h1 class="modal-title fs-5  text-white" id="exampleModalLabel">Profile Murid</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <img src="assets/images/murid/icon.jpg" alt="Admin"
+                                        class="rounded-circle p-1 bg-primary" width="110">
+                                    <div class="mt-3">
+                                        <h4>
+                                            <%= user.Nama %>
+                                        </h4>
+                                        <p class="text-secondary mb-1">Cabang: <%= user.Cabang %>
+                                        </p>
+                                        <p class="text-muted font-size-sm mb-1">
+                                            <%= user.Kelas %>
+                                                <%= user.Kelas && user.Sekolah ? ',' : '' %>
+                                                    <%= user.Sekolah %>
+                                        </p>
+                                        <p class="text-muted font-size-sm mb-1">Bergabung Sejak: </p>
+                                        <p class="text-muted font-size-sm">
+                                            <%= user.CreatedDate.toLocaleDateString() %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Telp</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <!-- <input type="text" class="form-control" value="john@example.com" /> -->
+                                        <h6>
+                                            : <%= user.Telp %>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Alamat</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <!-- <input type="text" class="form-control" value="(239) 816-9029" /> -->
+                                        <h6 class="text-wrap" style="width: 100%;">
+                                            : <%= user.Alamat %>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Lahir</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <!-- <input type="text" class="form-control" value="(239) 816-9029" /> -->
+                                        <h6>
+                                            : <%= user.TglLahir ? user.TglLahir.toLocaleDateString() : '-' %> (<%=
+                                                    user.Umur %> tahun)
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Bidang</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <% user.Guru.split(',') %>
+                                            <% user.Les.split(',').forEach((el,index)=> {if (el.trim() !== '') {%>
+                                                <h6>
+                                                    <%= el.trim().replace(/\b\w/g, c=> c.toUpperCase()) %> (Guru: <%=
+                                                            (user.Guru.split(',')[index] ?
+                                                            user.Guru.split(',')[index].trim().split(' ')[0].replace(/\b\w/g, c =>
+                                                            c.toUpperCase()) : ' Tidak ada') %>)
+                                                </h6>
+                                                <% } }) %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

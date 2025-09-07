@@ -1,0 +1,159 @@
+<div class="modal fade" id="editJadwalModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h1 class="modal-title fs-5  text-white" id="exampleModalLabel">Jadwal Murid</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="formSubmit" autocomplete="off" method="post" action="/newJadwal">
+                <input type="hidden" name="_csrf" id="csrfToken" value="<%= csrfToken %>">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label for="Murid" class="form-label">Murid</label>
+                            <select class="form-select murid" id="murid" name="murid">
+
+                            </select>
+                            <div class="invalid-feedback" id="errMurid"></div>
+                        </div>
+                        <div class="col-lg-8">
+                            <label for="" class="form-label">Jadwal</label>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text">Hari</span>
+                                <select class="form-select hari" name="hari" id="hari">
+                                    <option value="Senin">Senin</option>
+                                    <option value="Selasa">Selasa</option>
+                                    <option value="Rabu">Rabu</option>
+                                    <option value="Kamis">Kamis</option>
+                                    <option value="Jumat">Jumat</option>
+                                    <option value="Sabtu">Sabtu</option>
+                                </select>
+                                <span class="input-group-text">Bidang</span>
+                                <select class="form-select bidang" name="bidang" id="bidang">
+
+                                </select>
+                                <span class="input-group-text">Jam</span>
+                                <input type="time" class="form-control" name="jam" value="10:00">
+                                <span class="input-group-text">Trial</span>
+                                <div class="input-group-text">
+                                    <input class="form-check-input mt-0" type="checkbox" value="1" name="trial"
+                                        id="trial">
+                                </div>
+                                <button type="button" class="btn btn-info btn-sm" id="addDetail"><i
+                                        class="fas fa-plus"></i></button>
+                            </div>
+                            <div id="detail-block"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    counter = 0
+    $('#addDetail').click(function (e) {
+        e.preventDefault()
+        $(this).blur()
+        counter += 1
+        let html =
+            `
+            <div class="input-group mb-2" id="detail-${counter}">
+                <span class="input-group-text">Hari</span>
+                <select class="form-select hari" name="hari" id="hari${counter}">
+                    <option value="Senin">Senin</option>
+                    <option value="Selasa">Selasa</option>
+                    <option value="Rabu">Rabu</option>
+                    <option value="Kamis">Kamis</option>
+                    <option value="Jumat">Jumat</option>
+                    <option value="Sabtu">Sabtu</option>
+                </select>
+                <span class="input-group-text">Bidang</span>
+                <select class="form-select bidang" name="bidang" id="bidang${counter}">
+                    
+                </select>
+                <span class="input-group-text">Jam</span>
+                <input type="time" class="form-control" name="jam" value="10:00">
+                <span class="input-group-text">Trial</span>
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" value="1" name="trial"
+                        id="trial${counter}">
+                </div>
+                <button type="button" class="btn btn-danger btn-sm btnHapusForm"
+                    data-id="${counter}"><i class="fas fa-minus text-center"></i></button>
+            </div>
+        `
+        $('#detail-block').append(html)
+        getBidangJadwal(counter)
+    });
+
+    $(document).on('click', '.btnHapusForm', function () {
+        const rowId = $(this).data('id');
+        $(`#detail-${rowId}`).remove();
+        counter -= 1
+    });
+
+    function getBidangJadwal(counter = 0) {
+        let murid = $('#murid').val()
+
+        let bidangValues = [];
+
+        if (counter) {
+            $('#bidang' + counter).empty()
+        } else {
+            $('#bidang').empty()
+        }
+
+        $.ajax({
+            url: '/getBidangJadwal',
+            type: 'POST',
+            dataType: 'json',
+            data: { murid: murid, _csrf: $('#csrfToken').val() },
+            success: function (data) {
+                if (data && Array.isArray(data.data)) {
+                    data.data.forEach(function (b) {
+                        if (counter) {
+                            // $('#bidang' + counter).empty()
+                            $('#bidang' + counter).append(
+                                $('<option>', { value: b, text: b })
+                            );
+                        } else {
+                            // $('#bidang').empty()
+                            $('#bidang').append(
+                                $('<option>', { value: b, text: b })
+                            );
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    $('#murid').on('change', function () {
+        $('#detail-block').empty();
+        counter = 0;
+        getBidangJadwal()
+    });
+
+    $(document).ready(function () {
+        getBidangJadwal()
+
+        $('.formSubmit').submit(function (e) {
+            e.preventDefault()
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                dataType: 'json',
+                data: $(this).serialize(),
+                beforeSend: function () { },
+                success: function (response) {
+                    window.location.reload()
+                },
+                error: function (a, b, c) { alert(c) }
+            })
+        })
+    })
+</script>

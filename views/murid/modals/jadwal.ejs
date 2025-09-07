@@ -1,0 +1,153 @@
+<div class="modal fade" id="jadwalMuridModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h1 class="modal-title fs-5  text-white" id="exampleModalLabel">Jadwal Les <b>
+                        <%= murid.Nama %>
+                    </b>
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <h3>Senin</h3>
+                                    <div class="mt-3">
+                                        <% if(senin.length==0){ %>
+                                            <h5 class="font-size-sm">
+                                                -
+                                            </h5>
+
+                                            <% } else { %>
+                                                <% senin[0].Jadwal.split(',').forEach(el=> { %>
+                                                    <h5 class="font-size-sm">
+                                                        <%= el.trim() %>
+                                                    </h5>
+                                                    <% }) %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <h3>Selasa</h3>
+                                    <div class="mt-3">
+                                        <% if(selasa.length==0){ %>
+                                            <h5 class="font-size-sm">
+                                                -
+                                            </h5>
+
+                                            <% } else { %>
+                                                <% selasa[0].Jadwal.split(',').forEach(el=> { %>
+                                                    <h5 class="font-size-sm">
+                                                        <%= el.trim() %>
+                                                    </h5>
+                                                    <% }) %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <h3>Rabu</h3>
+                                    <div class="mt-3">
+                                        <% if(rabu.length==0){ %>
+                                            <h5 class="font-size-sm">
+                                                -
+                                            </h5>
+
+                                            <% } else { %>
+                                                <% rabu[0].Jadwal.split(',').forEach(el=> { %>
+                                                    <h5 class="font-size-sm">
+                                                        <%= el.trim() %>
+                                                    </h5>
+                                                    <% }) %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <h3>Kamis</h3>
+                                    <div class="mt-3">
+                                        <% if(kamis.length==0){ %>
+                                            <h5 class="font-size-sm">
+                                                -
+                                            </h5>
+
+                                            <% } else { %>
+                                                <% kamis[0].Jadwal.split(',').forEach(el=> { %>
+                                                    <h5 class="font-size-sm">
+                                                        <%= el.trim() %>
+                                                    </h5>
+                                                    <% }) %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <h3>Jumat</h3>
+                                    <div class="mt-3">
+                                        <% if(jumat.length==0){ %>
+                                            <h5 class="font-size-sm">
+                                                -
+                                            </h5>
+
+                                            <% } else { %>
+                                                <% jumat[0].Jadwal.split(',').forEach(el=> { %>
+                                                    <h5 class="font-size-sm">
+                                                        <%= el.trim() %>
+                                                    </h5>
+                                                    <% }) %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <h3>Sabtu</h3>
+                                    <div class="mt-3">
+                                        <% if(sabtu.length==0){ %>
+                                            <h5 class="font-size-sm">
+                                                -
+                                            </h5>
+
+                                            <% } else { %>
+                                                <% sabtu[0].Jadwal.split(',').forEach(el=> { %>
+                                                    <h5 class="font-size-sm">
+                                                        <%= el.trim() %>
+                                                    </h5>
+                                                    <% }) %>
+                                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
