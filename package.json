@@ -27,7 +27,8 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "dev" : "node server.js"
   },
   "name": "web-tutoring",
   "version": "1.0.0",
