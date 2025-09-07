@@ -24,11 +24,12 @@
     "querystring": "^0.2.1",
     "req-flash": "^0.0.3",
     "sequelize": "^6.37.7",
+    "uuid": "^12.0.0",
     "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "nodemon server.js",
-    "dev" : "node server.js"
+    "dev": "node server.js"
   },
   "name": "web-tutoring",
   "version": "1.0.0",
