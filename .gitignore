@@ -8,6 +8,9 @@ node_modules/
 # Uploads
 public/upload/
 
+# SSL / Private Keys
+*.pem
+
 # Logs
 logs
 *.log
