@@ -8,6 +8,9 @@ const constants = {
   developmentNotes: {
     "v 1.0.0": "Initial release",
   },
-  base_url: `http://localhost:${process.env.APP_PORT}`,
+  base_url:
+    process.env.NODE_APP === "production"
+      ? ""
+      : `http://localhost:${process.env.APP_PORT}`,
 };
 module.exports = { constants };
